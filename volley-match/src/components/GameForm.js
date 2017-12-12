@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { Form, Dropdown, Button } from 'semantic-ui-react';
+import GameFormView from './GameFormView';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-
+/**
+ * This is sort of the controller of GameForm.
+ * It handles all of the data fetching and state and calls the View by passing everything as prop.
+ */
 class GameForm extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,37 +19,48 @@ class GameForm extends Component {
     }
 
     getRequestData() {
-        let options = [];
+        let options1 = [];
+        let options2 = [];
 
         if (this.props.allUsersQuery && this.props.allUsersQuery.loading) {
-            options = [{ text: 'loading', value: 'default' }];
+            options1 = [{ text: 'loading', value: 'default' }];
+            options2 = options1;
         } else if (this.props.allUsersQuery && this.props.allUsersQuery.error) {
-            options = [{ text: 'error', value: 'default' }];
+            options1 = [{ text: 'error', value: 'default' }];
+            options2 = options1;
         } else {
-            //receive data from graphql request and for each user push an appropriate object into options state 
-            options = [];
+            //receive data from graphql request and for each user push an appropriate object into options array
+            options1 = [];
             this.props.allUsersQuery.allUsers.forEach(user => {
                 //TODO: this code still does not work
                 //check if the options are already assigned to one of the teams
-                let alreadyInTeam = false;
+                let alreadyInTeam1 = false;
+                let alreadyInTeam2 = false;
                 this.state.team1.forEach(item => {
-                    if (item.value === user.id) {
-                        alreadyInTeam = true;
+                    if (item === user.id) {
+                        alreadyInTeam1 = true;
                     }
+                    console.log("Value: " + item.value + ", id: " + user.id);
                 });
                 this.state.team2.forEach(item => {
-                    if (item.value === user.id) {
-                        alreadyInTeam = true;
+                    if (item === user.id) {
+                        alreadyInTeam2 = true;
                     }
                 });
-                //if user is not already in a team we want to give it as an option everywhere
-                if (!alreadyInTeam) {
-                    options.push({ text: user.firstName + ' ' + user.lastName, value: user.id });
+                //if user is already in team 1 we want to give it as an option only to team 1, and viceversa
+                let userOption = { text: user.firstName + ' ' + user.lastName, value: user.id };
+                if (alreadyInTeam1) {
+                    options1.push(userOption);
+                } else if (alreadyInTeam2) {
+                    options2.push(userOption);
+                } else { //in no team yet -> option to both
+                    options1.push(userOption);
+                    options2.push(userOption);
+                    console.log(user.firstName + " is not yet in team");
                 }
-                console.log('called it');
             });
         }
-        return options;
+        return { options1, options2 };
     }
 
     createGame() {
@@ -64,73 +79,57 @@ class GameForm extends Component {
         });
     }
 
+
     render() {
 
-        let options = this.getRequestData();
+        let { options1, options2 } = this.getRequestData();
         console.log(this.state);
 
-
         return (
-            <Form onSubmit={() => this.createGame()}>
-                <Form.Field>
-                    <label>Time</label>
-                    <input
-                        placeholder="Time"
-                        value={this.state.time}
-                        onChange={(event) => this.setState({ time: event.target.value })} />
-                </Form.Field>
-                <Form.Field>
-                    <label>Add Players to Team 1</label>
-                    <Dropdown
-                        placeholder="Add users" fluid multiple search selection
-                        options={options}
-                        value={this.state.team1}
-                        onChange={(e, data) => this.setState({ team1: data.value })}
-                    />
-                </Form.Field>
-                <Form.Field>
-                    <label>Add Players to Team 2</label>
-                    <Dropdown
-                        placeholder="Add users" fluid multiple search selection
-                        options={options}
-                        value={this.state.team2}
-                        onChange={(e, data) => this.setState({ team2: data.value })}
-                    />
-                </Form.Field>
-                <Button type="submit">Submit</Button>
-            </Form>
+            <GameFormView
+                options1={options1} 
+                options2={options2} 
+                team1={this.state.team1} 
+                team2={this.state.team2}
+                time={this.state.time}
+                createGame={() => this.createGame()}
+                changeTime={(event) => this.setState({ time: event.target.value })}
+                changeTeam1={(e, data) => this.setState({ team1: data.value })}
+                changeTeam2={(e, data) => this.setState({ team2: data.value})}
+            />
         );
     }
 }
 
+
 const allUsersQuery = gql`
-    query AllUsersQuery {
-        allUsers {
-            id
-            firstName
-            lastName
-        }
+query AllUsersQuery {
+    allUsers {
+        id
+        firstName
+        lastName
     }
+}
 `
 
 const createGameMutation = gql`
-    mutation CreateGameMutation($time: String!, $team1: [ID!]!, $team2: [ID!]!) {
-        createGame (
-            time: $time,
-            team1Ids: $team1,
-            team2Ids: $team2
-        ) {
+mutation CreateGameMutation($time: String!, $team1: [ID!]!, $team2: [ID!]!) {
+    createGame (
+        time: $time,
+        team1Ids: $team1,
+        team2Ids: $team2
+    ) {
+        id
+        time
+        team1 {
             id
-            time
-            team1 {
-                id
-            }
-            team2 {
-                id
-            }
         }
-    } 
+        team2 {
+            id
+        }
+    }
+} 
 `
 
 export default graphql(createGameMutation, { name: 'createGameMutation' })(
-    graphql(allUsersQuery, { name: 'allUsersQuery' })(GameForm));
+graphql(allUsersQuery, { name: 'allUsersQuery' })(GameForm));

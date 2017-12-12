@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import logo from './../logo.svg';
 import './../styles/App.css';
-import GameForm  from './GameForm';
+import GameForm from './GameForm';
 import GameList from './GameList';
-import { Button } from 'semantic-ui-react';
+import { Button, Header } from 'semantic-ui-react';
 
 
 class App extends Component {
@@ -21,7 +21,10 @@ class App extends Component {
         <main>
           <Button onClick={() => this.setState({ renderForm: true })} primary>Create game</Button>
           {this.state.renderForm && <GameForm />}
-          <GameList />
+          <section className="game-list">
+            <Header size='huge'>Games</Header>
+            <GameList />
+          </section>
         </main>
 
       </div>

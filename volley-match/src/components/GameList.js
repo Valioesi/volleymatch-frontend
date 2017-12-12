@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Segment, List, Grid, Header} from 'semantic-ui-react';
+import GameView from './GameView';
 
 class GameList extends Component {
 
@@ -17,32 +17,8 @@ class GameList extends Component {
 
         return (
             <div>
-                {gamesToRender.map(game => (
-                    <Segment>
-                        <Header size='large'>{game.time}</Header>
-                        <Grid columns={2} divided>
-                            <Grid.Column>
-                                <Header size='medium'>Team 1</Header>
-                                <List divided>
-                                    {game.team1.map(player => (
-                                        <List.Item>
-                                            {player.firstName} {player.lastName}
-                                        </List.Item>
-                                    ))}
-                                </List>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <Header size='medium'>Team 2</Header>
-                                <List divided>
-                                    {game.team2.map(player => (
-                                        <List.Item>
-                                            {player.firstName} {player.lastName}
-                                        </List.Item>
-                                    ))}
-                                </List>
-                            </Grid.Column>
-                        </Grid>
-                    </Segment>
+            {gamesToRender.map(game => (
+                    <GameView game={game} />
                 ))}
             </div>
         );
