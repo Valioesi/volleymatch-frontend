@@ -1,0 +1,61 @@
+# The following types define the data model of the example service
+# based on which the GraphQL API is generated
+
+type User @model {
+    id: ID! @isUnique
+    firstName: String!
+    lastName: String!
+    age: Int!
+    gender: Gender!
+    height: Int!
+    gamesPlayedTeam1: Game @relation(name: "PlayersInTeam1")
+    gamesPlayedTeam2: Game @relation(name: "PlayersInTeam2")    
+    wonGames: GameResult  @relation(name: "WinnersInGame")
+    lostGames: GameResult  @relation(name: "LosersInGame")
+    rankingEntries: RankingEntry @relation(name: "UsersRankingEntry")
+
+  # Uncomment below - you can declare relations between models like this
+
+  # posts: [Post!]! @relation(name: "UserPosts")
+}
+
+enum Gender {
+  MAN
+  WOMAN
+}
+
+type Game @model {
+    id: ID!  @isUnique
+    result: GameResult @relation(name: "GameResult")
+    team1: [User!]! @relation(name: "PlayersInTeam1")
+    team2: [User!]! @relation(name: "PlayersInTeam2")
+    time: String #change to DateTime later
+}
+
+type GameResult @model {
+    id: ID!  @isUnique  
+    game: Game! @relation(name: "GameResult")
+    winners: [User!]! @relation(name: "WinnersInGame")
+    losers: [User!]!  @relation(name: "LosersInGame")
+    winnersScore: Int!
+    losersScore: Int!
+}
+
+type RankingEntry @model {
+    id: ID!  @isUnique  
+    user: User! @relation(name: "UsersRankingEntry")
+    points: Int!
+    gamesPlayed: Int!
+    gamesWon: Int!
+    daysPlayed: Int!   
+}
+
+# Uncomment the model below as well
+
+# type Post @model {
+#   id: ID! @isUnique
+#   title: String!
+#
+#   # Every relation also required a back-relation (to determine 1:1, 1:n or n:m)
+#   author: User! @relation(name: "UserPosts")
+# }
