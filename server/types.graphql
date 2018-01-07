@@ -8,15 +8,11 @@ type User @model {
     age: Int!
     gender: Gender!
     height: Int!
-    gamesPlayedTeam1: Game @relation(name: "PlayersInTeam1")
-    gamesPlayedTeam2: Game @relation(name: "PlayersInTeam2")    
-    wonGames: GameResult  @relation(name: "WinnersInGame")
-    lostGames: GameResult  @relation(name: "LosersInGame")
+    gamesPlayedTeam1: [Game!]! @relation(name: "PlayersInTeam1")
+    gamesPlayedTeam2: [Game!]! @relation(name: "PlayersInTeam2")    
+    wonGames: [GameResult!]!  @relation(name: "WinnersInGame")
+    lostGames: [GameResult!]!  @relation(name: "LosersInGame")
     rankingEntries: RankingEntry @relation(name: "UsersRankingEntry")
-
-  # Uncomment below - you can declare relations between models like this
-
-  # posts: [Post!]! @relation(name: "UserPosts")
 }
 
 enum Gender {
