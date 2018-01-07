@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import GameView from './GameView';
+import Game from './Game';
 
 class GameList extends Component {
 
@@ -17,26 +17,33 @@ class GameList extends Component {
 
         return (
             <div>
-            {gamesToRender.map(game => (
-                    <GameView game={game} />
+                {gamesToRender.map(game => (
+                    <Game game={game} key={game.id}/>
                 ))}
             </div>
         );
     }
 }
 
-const allGamesQuery = gql`
+export const allGamesQuery = gql`
     query AllGamesQuery {
         allGames{
             id
             time
             team1{
+                id
                 firstName
                 lastName
             }
             team2{
+                id
                 firstName
                 lastName
+            }
+            result {
+                winnersScore
+                losersScore
+                team1Won
             }
         }
     }

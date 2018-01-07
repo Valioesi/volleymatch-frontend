@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Segment, List, Grid, Header, Button } from 'semantic-ui-react';
+import { Segment, List, Grid, Header, Button, Input } from 'semantic-ui-react';
 
 
 class GameView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showResultInput: false
-        };
-    }
+
 
     render() {
+        console.log('team 1: ', this.props.game.team1);
+
         return (
             <Segment>
                 <Header size='large'>{this.props.game.time}</Header>
@@ -20,7 +17,7 @@ class GameView extends Component {
                             <Header size='medium'>Team 1</Header>
                             <List divided>
                                 {this.props.game.team1.map(player => (
-                                    <List.Item>
+                                    <List.Item key={player.id}>
                                         {player.firstName} {player.lastName}
                                     </List.Item>
                                 ))}
@@ -30,28 +27,55 @@ class GameView extends Component {
                             <Header size='medium'>Team 2</Header>
                             <List divided>
                                 {this.props.game.team2.map(player => (
-                                    <List.Item>
+                                    <List.Item key={player.id}>
                                         {player.firstName} {player.lastName}
                                     </List.Item>
                                 ))}
                             </List>
                         </Grid.Column>
                     </Grid.Row>
-                    {!this.state.showResultInput && (
+                    {!this.props.shouldShowResultInput && !this.props.shouldShowResults && (
                         <Grid.Row centered={true}>
-                            <Button onClick={() => this.setState({ showResultInput: true })}>Set results</Button>
+                            <Button onClick={this.props.showResultInput}>Set results</Button>
                         </Grid.Row>
                     )}
-                    {this.state.showResultInput && (
-                        <Grid.Row centered={true}>
+                    {this.props.shouldShowResultInput && (
+                        <Grid.Row>
                             <Grid.Column>
-                                blub
+                                <Input
+                                    placeholder='Result team 1'
+                                    onChange={this.props.changeResultTeam1}
+                                    value={this.props.resultTeam1}
+                                />
+
                             </Grid.Column>
                             <Grid.Column>
-                                blub
+                                <Input
+                                    placeholder='Result team 2'
+                                    onChange={this.props.changeResultTeam2}
+                                    value={this.props.resultTeam2} />
                             </Grid.Column>
                         </Grid.Row>
+                    )}
 
+                    {this.props.shouldShowResultInput && (
+                        <Grid.Row centered={true}>
+                            <Button onClick={this.props.saveResults} primary>
+                                Save results
+                                </Button>
+                        </Grid.Row>
+                    )}
+
+                    {this.props.shouldShowResults && (
+                        <Grid.Row>
+                            <Grid.Column>
+                                <p>{this.props.resultTeam1}</p>
+                            </Grid.Column>
+                            <Grid.Column>
+                                <p>{this.props.resultTeam2}</p>
+
+                            </Grid.Column>
+                        </Grid.Row>
                     )}
                 </Grid>
             </Segment>

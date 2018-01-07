@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import GameFormView from './GameFormView';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { allGamesQuery } from './GameList';
 
 /**
  * This is sort of the controller of GameForm.
@@ -71,9 +72,12 @@ class GameForm extends Component {
                 time: this.state.time,
                 team1: this.state.team1,
                 team2: this.state.team2
-            }
+            },
+            refetchQueries: [{ query: allGamesQuery }]  //this will trigger a refetching of the games list and update of list component
         }).then(response => {
             console.log(response);
+            //this will call the prop function (which in this case will change the state in App Component)            
+            this.props.hideForm();
         }).catch(error => {
             console.log(error);
         });
@@ -87,15 +91,15 @@ class GameForm extends Component {
 
         return (
             <GameFormView
-                options1={options1} 
-                options2={options2} 
-                team1={this.state.team1} 
+                options1={options1}
+                options2={options2}
+                team1={this.state.team1}
                 team2={this.state.team2}
                 time={this.state.time}
                 createGame={() => this.createGame()}
                 changeTime={(event) => this.setState({ time: event.target.value })}
                 changeTeam1={(e, data) => this.setState({ team1: data.value })}
-                changeTeam2={(e, data) => this.setState({ team2: data.value})}
+                changeTeam2={(e, data) => this.setState({ team2: data.value })}
             />
         );
     }
@@ -132,4 +136,4 @@ mutation CreateGameMutation($time: String!, $team1: [ID!]!, $team2: [ID!]!) {
 `
 
 export default graphql(createGameMutation, { name: 'createGameMutation' })(
-graphql(allUsersQuery, { name: 'allUsersQuery' })(GameForm));
+    graphql(allUsersQuery, { name: 'allUsersQuery' })(GameForm));

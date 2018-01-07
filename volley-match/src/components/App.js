@@ -13,6 +13,8 @@ class App extends Component {
   }
 
   render() {
+    console.log('App Component State', this.state);
+
     return (
       <div className="App">
         <header className="App-header">
@@ -20,7 +22,9 @@ class App extends Component {
         </header>
         <main>
           <Button onClick={() => this.setState({ renderForm: true })} primary>Create game</Button>
-          {this.state.renderForm && <GameForm />}
+          {this.state.renderForm && (
+            <GameForm hideForm={() => this.setState({ renderForm: false })} />
+          )}
           <section className="game-list">
             <Header size='huge'>Games</Header>
             <GameList />

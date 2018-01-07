@@ -39,6 +39,7 @@ type GameResult @model {
     losers: [User!]!  @relation(name: "LosersInGame")
     winnersScore: Int!
     losersScore: Int!
+    team1Won: Boolean! @migrationValue(value: true)
 }
 
 type RankingEntry @model {

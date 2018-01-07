@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Dropdown, Button } from 'semantic-ui-react';
+import { Form, Dropdown, Button, Input } from 'semantic-ui-react';
 
 /**
  * This is sort of the View of GameForm. 
@@ -17,7 +17,7 @@ class GameFormView extends Component {
             <Form onSubmit={this.props.createGame}>
                 <Form.Field>
                     <label>Time</label>
-                    <input
+                    <Input
                         placeholder="Time"
                         value={this.props.time}
                         onChange={this.props.changeTime} />
