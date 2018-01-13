@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Segment, List, Grid, Header, Button, Input } from 'semantic-ui-react';
+import moment from 'moment';
 
 
 class GameView extends Component {
@@ -10,7 +11,7 @@ class GameView extends Component {
 
         return (
             <Segment>
-                <Header size='large'>{this.props.game.time}</Header>
+                <Header size='large'>{moment(this.props.game.time).format("MMM Do YYYY")}</Header>
                 <Grid columns={2} divided>
                     <Grid.Row>
                         <Grid.Column>

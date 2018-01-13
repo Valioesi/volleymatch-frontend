@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import GameFormView from './GameFormView';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { allGamesQuery } from './GameList';
+import moment from 'moment';
+import { allGamesQuery, createGameMutation } from './../queries/games';
+import { allUsersQuery } from './../queries/users';
 
 /**
  * This is sort of the controller of GameForm.
@@ -13,7 +15,7 @@ class GameForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            time: '',
+            time: moment(),
             team1: [],
             team2: []
         }
@@ -97,7 +99,7 @@ class GameForm extends Component {
                 team2={this.state.team2}
                 time={this.state.time}
                 createGame={() => this.createGame()}
-                changeTime={(event) => this.setState({ time: event.target.value })}
+                changeTime={(time) => this.setState({ time: time })}
                 changeTeam1={(e, data) => this.setState({ team1: data.value })}
                 changeTeam2={(e, data) => this.setState({ team2: data.value })}
             />
@@ -106,34 +108,8 @@ class GameForm extends Component {
 }
 
 
-const allUsersQuery = gql`
-query AllUsersQuery {
-    allUsers {
-        id
-        firstName
-        lastName
-    }
-}
-`
 
-const createGameMutation = gql`
-mutation CreateGameMutation($time: String!, $team1: [ID!]!, $team2: [ID!]!) {
-    createGame (
-        time: $time,
-        team1Ids: $team1,
-        team2Ids: $team2
-    ) {
-        id
-        time
-        team1 {
-            id
-        }
-        team2 {
-            id
-        }
-    }
-} 
-`
+
 
 export default graphql(createGameMutation, { name: 'createGameMutation' })(
     graphql(allUsersQuery, { name: 'allUsersQuery' })(GameForm));

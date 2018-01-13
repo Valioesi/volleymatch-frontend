@@ -2,51 +2,32 @@ import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Game from './Game';
+import { allGamesOfUserQuery } from './../queries/games';
 
 class GameList extends Component {
 
     render() {
-        if (this.props.allGamesQuery && this.props.allGamesQuery.loading) {
+        if (this.props.allGamesOfUserQuery && this.props.allGamesOfUserQuery.loading) {
             return <div>Loading Games</div>;
         }
-        if (this.props.allGamesQuery && this.props.allGamesQuery.error) {
+        if (this.props.allGamesOfUserQuery && this.props.allGamesOfUserQuery.error) {
             return <div>Unable to load Games</div>;
         }
 
-        const gamesToRender = this.props.allGamesQuery.allGames;
+        const gamesToRender = this.props.allGamesOfUserQuery.allGames;
 
         return (
             <div>
                 {gamesToRender.map(game => (
-                    <Game game={game} key={game.id}/>
+                    <Game game={game} key={game.id} />
                 ))}
             </div>
         );
     }
 }
 
-export const allGamesQuery = gql`
-    query AllGamesQuery {
-        allGames{
-            id
-            time
-            team1{
-                id
-                firstName
-                lastName
-            }
-            team2{
-                id
-                firstName
-                lastName
-            }
-            result {
-                winnersScore
-                losersScore
-                team1Won
-            }
-        }
-    }
-`
 
-export default graphql(allGamesQuery, { name: 'allGamesQuery' })(GameList);
+export default graphql(allGamesOfUserQuery, {
+    name: 'allGamesOfUserQuery',
+    options: { variables: { resultFilter: null }}
+})(GameList);

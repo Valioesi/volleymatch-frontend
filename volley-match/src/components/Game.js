@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import GameView from './GameView';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { createGameResultMutation } from './../queries/games';
 
 class Game extends Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class Game extends Component {
 
         const result = this.props.game.result;
         let resultTeam1 = '';
-        let resultTeam2 = ''
+        let resultTeam2 = '';
 
         //check if there is already a result set for this game
         //if yes -> check which team one and set the score accordingly
@@ -121,24 +121,6 @@ class Game extends Component {
 }
 
 
-const createGameResultMutation = gql`
-mutation CreateGameResultMutation($gameId: ID!, $winners: [ID!]!, $losers: [ID!], $winnersScore: Int!, $losersScore: Int!, $team1Won: Boolean!) {
-    createGameResult (
-        gameId: $gameId,
-        winnersIds: $winners,
-        losersIds: $losers,
-        winnersScore: $winnersScore,
-        losersScore: $losersScore,
-        team1Won: $team1Won
-    ) {
-        winners {
-            firstName
-        }
-        losers {
-            firstName
-        }
-    }
-} 
-`
+
 
 export default graphql(createGameResultMutation, { name: 'createGameResultMutation' })(Game);

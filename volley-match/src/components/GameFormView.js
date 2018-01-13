@@ -1,26 +1,51 @@
 import React, { Component } from 'react';
 import { Form, Dropdown, Button, Input } from 'semantic-ui-react';
+import InputMoment from 'input-moment';
+import '../../node_modules/input-moment/dist/input-moment.css';
 
 /**
- * This is sort of the View of GameForm. 
+ * This is sort of the View of GameForm.  
  * It does not handle any of the logic. 
  * Its only concern is the rendering of elemets
  */
 class GameFormView extends Component {
-   
+
+    constructor(props){
+        super(props);
+        this.state = {
+            shouldShowDatePicker: false
+        }
+    }
+
+
+    toggleDatePicker(){
+        this.setState({ 
+            shouldShowDatePicker: !this.state.shouldShowDatePicker
+        })
+    }
+
     render() {
-        
+
         console.log("Props: ", this.props.options1);
         console.log("Props: ", this.props.time);
-        
+
+
         return (
             <Form onSubmit={this.props.createGame}>
                 <Form.Field>
                     <label>Time</label>
-                    <Input
-                        placeholder="Time"
-                        value={this.props.time}
-                        onChange={this.props.changeTime} />
+                    <input type="text" onFocus={() => this.toggleDatePicker()}
+                        value={this.props.time.format('llll')} readOnly />
+                    {this.state.shouldShowDatePicker && (
+                        <InputMoment
+                            moment={this.props.time}
+                            onChange={this.props.changeTime}
+                            onSave={() => this.toggleDatePicker()}
+                            prevMonthIcon='arrow left icon'
+                            nextMonthIcon='arrow right icon'
+                            minStep={5}
+                        />
+                    )}
                 </Form.Field>
                 <Form.Field>
                     <label>Add Players to Team 1</label>
@@ -40,7 +65,7 @@ class GameFormView extends Component {
                         onChange={this.props.changeTeam2}
                     />
                 </Form.Field>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" primary>Create Game</Button>
             </Form>
         );
     }
