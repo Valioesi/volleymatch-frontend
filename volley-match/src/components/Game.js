@@ -14,9 +14,6 @@ class Game extends Component {
         //check if there is already a result set for this game
         //if yes -> check which team one and set the score accordingly
         //if no -> results stay empty string
-
-        console.log('result', result);
-
         if (result) {
             if (result.team1Won) {
                 resultTeam1 = result.winnersScore;
@@ -34,14 +31,12 @@ class Game extends Component {
             resultTeam1: resultTeam1,
             resultTeam2: resultTeam2
         };
-
       
-        console.log('state', this.state);
     }
 
 
     /**
-     * this function checks which team one based on the results
+     * this function checks which team won based on the results
      * and executes the graphql mutation to create the game result
      */
     saveResults() {
@@ -94,8 +89,6 @@ class Game extends Component {
             this.setState({ shouldShowResultInput: false });
             //and show the results
             this.setState({ shouldShowResults: true });
-
-            //TODO: reload game list component
         }).catch(error => {
             console.log(error);
         });

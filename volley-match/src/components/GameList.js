@@ -16,6 +16,8 @@ class GameList extends Component {
 
         const gamesToRender = this.props.allGamesOfUserQuery.allGames;
 
+        console.log('games of gamelist', gamesToRender);
+
         return (
             <div>
                 {gamesToRender.map(game => (

@@ -3,7 +3,7 @@ import GameFormView from './GameFormView';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import moment from 'moment';
-import { allGamesQuery, createGameMutation } from './../queries/games';
+import { allGamesQuery, createGameMutation, allGamesOfUserQuery } from './../queries/games';
 import { allUsersQuery } from './../queries/users';
 
 /**
@@ -35,7 +35,6 @@ class GameForm extends Component {
             //receive data from graphql request and for each user push an appropriate object into options array
             options1 = [];
             this.props.allUsersQuery.allUsers.forEach(user => {
-                //TODO: this code still does not work
                 //check if the options are already assigned to one of the teams
                 let alreadyInTeam1 = false;
                 let alreadyInTeam2 = false;
@@ -75,7 +74,14 @@ class GameForm extends Component {
                 team1: this.state.team1,
                 team2: this.state.team2
             },
-            refetchQueries: [{ query: allGamesQuery }]  //this will trigger a refetching of the games list and update of list component
+            //this will trigger a refetching of the games list and update of list component
+            refetchQueries: [{
+                query: allGamesQuery,
+                variables: { resultFilter: { id_not: null } }
+            }, {
+                query: allGamesOfUserQuery,
+                variables: { resultFilter: null }
+            }]
         }).then(response => {
             console.log(response);
             //this will call the prop function (which in this case will change the state in App Component)            
@@ -87,9 +93,7 @@ class GameForm extends Component {
 
 
     render() {
-
         let { options1, options2 } = this.getRequestData();
-        console.log(this.state);
 
         return (
             <GameFormView

@@ -5,13 +5,10 @@ import moment from 'moment';
 
 class GameView extends Component {
 
-
     render() {
-        console.log('team 1: ', this.props.game.team1);
-
         return (
             <Segment>
-                <Header size='large'>{moment(this.props.game.time).format("MMM Do YYYY")}</Header>
+                <Header size='large'>{moment(this.props.game.time).format("MMM Do, h a")}</Header>
                 <Grid columns={2} divided>
                     <Grid.Row>
                         <Grid.Column>

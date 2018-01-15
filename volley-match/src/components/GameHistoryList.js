@@ -29,5 +29,5 @@ class GameHistoryList extends Component {
 
 export default graphql(allGamesOfUserQuery, {
     name: 'allGamesOfUserQuery',
-    options: { variables: { resultFilter: { id_not: null } } }
+    options: { variables: { resultFilter: { id_not: null } }, pollInterval: 2000 }
 })(GameHistoryList);

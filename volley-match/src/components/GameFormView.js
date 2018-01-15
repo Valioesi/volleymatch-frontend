@@ -25,11 +25,6 @@ class GameFormView extends Component {
     }
 
     render() {
-
-        console.log("Props: ", this.props.options1);
-        console.log("Props: ", this.props.time);
-
-
         return (
             <Form onSubmit={this.props.createGame}>
                 <Form.Field>
